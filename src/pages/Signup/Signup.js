@@ -1,14 +1,21 @@
 import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import useSignup from '../../hooks/useSignup'
 import styles from './Signup.module.css'
 
 export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const { error, isPending, signup } = useSignup()
+  const history = useHistory()
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(displayName, email, password)
+    await signup(email, password, displayName)
+    if(!error) {
+      history.push('/')
+    }
   }
 
   return (
@@ -26,7 +33,9 @@ export default function Signup() {
         <span>Password:</span>
         <input type="password" onChange={e => setPassword(e.target.value)} value={password} />
       </label>
-      <button className="btn">Login</button>
+      {!isPending && <button className="btn">Signup</button>}
+      {isPending && <button className="btn" disabled>Loading...</button>}
+      {error && <p>{error}</p>}
     </form>
   )
 }
