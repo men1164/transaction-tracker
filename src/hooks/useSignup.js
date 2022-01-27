@@ -1,10 +1,12 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { useState } from "react"
 import { projectAuth } from "../firebase/config"
+import { useAuthContext } from "../hooks/useAuthContext"
 
 const useSignup = () => {
   const [error, setError] = useState(null)
   const [isPending, setIsPending] = useState(false)
+  const { dispatch } = useAuthContext()
 
   const signup = async (email, password, displayName) => {
     setError(null)
@@ -12,11 +14,11 @@ const useSignup = () => {
 
     try {
       const res = await createUserWithEmailAndPassword(projectAuth, email, password)
-      console.log(res.user)
       if(!res) {
         throw new Error('Could not signup with email and password')
       }
       await updateProfile(res.user, { displayName })
+      dispatch({ type: 'LOGIN', payload: res.user })
       setError(null)
       setIsPending(false)
     }
