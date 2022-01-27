@@ -19,7 +19,7 @@ const useLogin = () => {
 
       if(!isCancelled) {
         setError(null)
-        setIsPending(true)
+        setIsPending(false)
       }
     }
     catch(err) {
