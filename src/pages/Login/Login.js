@@ -12,9 +12,9 @@ export default function Login() {
   const handleSubmit = async e => {
     e.preventDefault()
     await login(email, password)
-    if(!error) {
-      history.push('/')
-    }
+    // if(!error) {
+    //   history.push('/')
+    // }
   }
 
   return (
@@ -28,7 +28,9 @@ export default function Login() {
         <span>Password:</span>
         <input type="password" onChange={e => setPassword(e.target.value)} value={password} />
       </label>
-      <button className="btn">Login</button>
+      {!isPending && <button className="btn">Login</button>}
+      {isPending && <button className="btn" disabled>Loading...</button>}
+      {error && <p>{error}</p>}
     </form>
   )
 }
